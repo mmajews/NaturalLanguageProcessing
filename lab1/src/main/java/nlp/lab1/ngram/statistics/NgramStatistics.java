@@ -6,13 +6,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class NgramStatistics {
 	private static final String REGEX_WORD_SPLIT = "[,.!? \":\n\r-]+";
 	private final int numberOfLetterInAlphabet;
 	private final String nameOfLanguage;
 	private List<NGramWord> nGramWordList = new ArrayList<>();
+	private TreeSet<WordToOccurrenceWrapper> diGramsSorted = new TreeSet<>(new WordToOccurenceWrapperReverseComparator());
+	private TreeSet<WordToOccurrenceWrapper> triGramsSorted = new TreeSet<>(new WordToOccurenceWrapperReverseComparator());
 	private Map<String, Double> wordToOccurrenceDiGram = new HashMap<>();
 	private Map<String, Double> wordToOccurrenceTriGram = new HashMap<>();
 
@@ -42,6 +44,14 @@ public class NgramStatistics {
 		for (NGramWord nGramWord : nGramWordList) {
 			updateDiGrams(nGramWord);
 			updateTriGrams(nGramWord);
+		}
+
+		for (Map.Entry<String, Double> wordToOccurence : wordToOccurrenceDiGram.entrySet()) {
+			diGramsSorted.add(new WordToOccurrenceWrapper(wordToOccurence.getKey(), wordToOccurence.getValue()));
+		}
+
+		for (Map.Entry<String, Double> wordToOccurence : wordToOccurrenceTriGram.entrySet()) {
+			triGramsSorted.add(new WordToOccurrenceWrapper(wordToOccurence.getKey(), wordToOccurence.getValue()));
 		}
 	}
 

@@ -5,6 +5,9 @@ public class Main {
 		AllLanguageStatistics allLanguageStatistics = new AllLanguageStatistics();
 		allLanguageStatistics.generateStatistics();
 
+		String toBeDetected = args[0];
+		System.out.println("Finding language that is good fit for sentence : \"" + toBeDetected + "\"");
+
 		System.out.println();
 	}
 
