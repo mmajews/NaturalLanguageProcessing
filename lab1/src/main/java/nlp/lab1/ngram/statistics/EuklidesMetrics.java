@@ -12,6 +12,6 @@ public class EuklidesMetrics implements Metrics {
 			value += Math.pow(firstValues.get(index) - secondValues.get(index), 2d);
 			index++;
 		}
-		return value;
+		return Math.sqrt(value);
 	}
 }
