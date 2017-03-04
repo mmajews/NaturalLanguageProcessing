@@ -15,7 +15,7 @@ public class NgramStatisticsCounter {
 	}
 
 	private List<String> splitContentToListOfWords(String content){
-		String[] splitedContentByWords = content.split(REGEX_WORD_SPLIT);
-		return Arrays.asList(splitedContentByWords);
+		String[] slicedContentByWords = content.split(REGEX_WORD_SPLIT);
+		return Arrays.asList(slicedContentByWords);
 	}
 }
