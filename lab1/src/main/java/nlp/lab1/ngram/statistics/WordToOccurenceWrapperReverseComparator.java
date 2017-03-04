@@ -10,6 +10,8 @@ public class WordToOccurenceWrapperReverseComparator implements Comparator<WordT
 			return 1;
 		if (delta > 0)
 			return -1;
-		return 0;
+
+		//fixme if equal do not make it equal it does not really matter
+		return 1;
 	}
 }

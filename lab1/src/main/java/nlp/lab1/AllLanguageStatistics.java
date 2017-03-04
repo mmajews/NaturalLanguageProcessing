@@ -8,17 +8,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static nlp.lab1.ngram.statistics.LanguageConstants.ENGLISH;
+import static nlp.lab1.ngram.statistics.LanguageConstants.FINNISH;
+import static nlp.lab1.ngram.statistics.LanguageConstants.GERMAN;
+import static nlp.lab1.ngram.statistics.LanguageConstants.ITALIAN;
+import static nlp.lab1.ngram.statistics.LanguageConstants.POLISH;
+import static nlp.lab1.ngram.statistics.LanguageConstants.SPANISH;
+
 public class AllLanguageStatistics {
-	public static final String ENGLISH = "English";
-	public static final String FINNISH = "Finnish";
-	public static final String GERMAN = "German";
-	public static final String ITALIAN = "Italian";
-	public static final String POLISH = "Polish";
-	public static final String SPANISH = "Spanish";
 
 	private Map<String, NgramStatistics> languageStatistics = new HashMap<>();
 
-	public void generateStatistics() {
+	public Map<String, NgramStatistics> getLanguageStatistics() {
+		return languageStatistics;
+	}
+
+	void generateStatistics() {
 		long start = System.currentTimeMillis();
 
 		NgramStatistics englishStatistics = new NgramStatistics(ENGLISH, 26);
@@ -35,9 +40,9 @@ public class AllLanguageStatistics {
 		List<File> finishSourceFiles = Lists.newArrayList(
 				new File(getFileFromResourceFolder("finnish1.txt")),
 				new File(getFileFromResourceFolder("finnish2.txt")));
-		englishStatistics.updateNGramWordStatistics(englishSourceFiles);
+		finishStatistics.updateNGramWordStatistics(finishSourceFiles);
 		languageStatistics.put(FINNISH, finishStatistics);
-		System.out.println("Finish done!");
+		System.out.println("Finnish done!");
 
 		NgramStatistics germanStatistics = new NgramStatistics(GERMAN, 26);
 		List<File> germanSourceFiles = Lists.newArrayList(
@@ -46,14 +51,14 @@ public class AllLanguageStatistics {
 				new File(getFileFromResourceFolder("german3.txt")),
 				new File(getFileFromResourceFolder("german4.txt")));
 		languageStatistics.put(GERMAN, germanStatistics);
-		englishStatistics.updateNGramWordStatistics(englishSourceFiles);
+		germanStatistics.updateNGramWordStatistics(germanSourceFiles);
 		System.out.println("German done!");
 
 		NgramStatistics italianStatistics = new NgramStatistics(ITALIAN, 21);
 		List<File> italianSourceFiles = Lists.newArrayList(
 				new File(getFileFromResourceFolder("italian1.txt")),
 				new File(getFileFromResourceFolder("italian2.txt")));
-		englishStatistics.updateNGramWordStatistics(englishSourceFiles);
+		italianStatistics.updateNGramWordStatistics(italianSourceFiles);
 		languageStatistics.put(ITALIAN, italianStatistics);
 		System.out.println("Italian done!");
 
@@ -62,15 +67,15 @@ public class AllLanguageStatistics {
 				new File(getFileFromResourceFolder("polish1.txt")),
 				new File(getFileFromResourceFolder("polish2.txt")),
 				new File(getFileFromResourceFolder("polish3.txt")));
-		englishStatistics.updateNGramWordStatistics(englishSourceFiles);
-		languageStatistics.put(POLISH, finishStatistics);
+		polishStatistics.updateNGramWordStatistics(polishSourceFiles);
+		languageStatistics.put(POLISH, polishStatistics);
 		System.out.println("Polish done!");
 
 		NgramStatistics spanishStatistics = new NgramStatistics(SPANISH, 27);
 		List<File> spanishSourceFiles = Lists.newArrayList(
 				new File(getFileFromResourceFolder("spanish1.txt")),
 				new File(getFileFromResourceFolder("spanish2.txt")));
-		englishStatistics.updateNGramWordStatistics(englishSourceFiles);
+		spanishStatistics.updateNGramWordStatistics(spanishSourceFiles);
 		languageStatistics.put(SPANISH, spanishStatistics);
 		System.out.println("Spanish done!");
 

@@ -15,7 +15,7 @@ class FileReader {
 		Preconditions.checkArgument(sourceFile.exists(), "File does not exist!");
 		String wholeFile = null;
 		try {
-			wholeFile = FileUtils.readFileToString(sourceFile, "UTF-8");
+			wholeFile = FileUtils.readFileToString(sourceFile);
 		} catch (IOException e) {
 			logger.warning("Exception during reading from file to string !");
 		}

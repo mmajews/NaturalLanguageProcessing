@@ -10,11 +10,11 @@ import java.util.TreeSet;
 
 public class NgramStatistics {
 	private static final String REGEX_WORD_SPLIT = "[,.!? \":\n\r-]+";
-	private final int numberOfLetterInAlphabet;
-	private final String nameOfLanguage;
+	private int numberOfLetterInAlphabet;
+	private String nameOfLanguage;
 	private List<NGramWord> nGramWordList = new ArrayList<>();
-	private TreeSet<WordToOccurrenceWrapper> diGramsSorted = new TreeSet<>(new WordToOccurenceWrapperReverseComparator());
-	private TreeSet<WordToOccurrenceWrapper> triGramsSorted = new TreeSet<>(new WordToOccurenceWrapperReverseComparator());
+	private Map<String, Integer> diGramsSorted = new HashMap<>();
+	private Map<String, Integer> triGramsSorted = new HashMap<>();
 	private Map<String, Double> wordToOccurrenceDiGram = new HashMap<>();
 	private Map<String, Double> wordToOccurrenceTriGram = new HashMap<>();
 
@@ -23,9 +23,11 @@ public class NgramStatistics {
 		this.nameOfLanguage = nameOfLanguage;
 	}
 
-	private void updateNGramWordStatistics(File sourceFile) {
-		String contentOfFile = FileReader.getContentOfFile(sourceFile);
-		List<String> allWordsInText = splitContentToListOfWords(contentOfFile);
+	public NgramStatistics() {
+	}
+
+	public void updateNGramWordStatistics(String content) {
+		List<String> allWordsInText = splitContentToListOfWords(content);
 		for (String word : allWordsInText) {
 			nGramWordList.add(new NGramWord(word));
 		}
@@ -37,21 +39,39 @@ public class NgramStatistics {
 	}
 
 	public void updateNGramWordStatistics(List<File> englishSourceFiles) {
-		for (File englishSourceFile : englishSourceFiles) {
-			updateNGramWordStatistics(englishSourceFile);
+		for (File sourceFile : englishSourceFiles) {
+			String contentOfFile = FileReader.getContentOfFile(sourceFile);
+			updateNGramWordStatistics(contentOfFile);
 		}
+		processAndSortElements();
+	}
 
+	public void processAndSortElements() {
 		for (NGramWord nGramWord : nGramWordList) {
 			updateDiGrams(nGramWord);
 			updateTriGrams(nGramWord);
 		}
 
+		TreeSet<WordToOccurrenceWrapper> diGramsSortedTemp = new TreeSet<>(new WordToOccurenceWrapperReverseComparator());
+		TreeSet<WordToOccurrenceWrapper> triGramsSortedTemp = new TreeSet<>(new WordToOccurenceWrapperReverseComparator());
 		for (Map.Entry<String, Double> wordToOccurence : wordToOccurrenceDiGram.entrySet()) {
-			diGramsSorted.add(new WordToOccurrenceWrapper(wordToOccurence.getKey(), wordToOccurence.getValue()));
+			diGramsSortedTemp.add(new WordToOccurrenceWrapper(wordToOccurence.getKey(), wordToOccurence.getValue()));
 		}
 
 		for (Map.Entry<String, Double> wordToOccurence : wordToOccurrenceTriGram.entrySet()) {
-			triGramsSorted.add(new WordToOccurrenceWrapper(wordToOccurence.getKey(), wordToOccurence.getValue()));
+			triGramsSortedTemp.add(new WordToOccurrenceWrapper(wordToOccurence.getKey(), wordToOccurence.getValue()));
+		}
+
+		int index = 0;
+		for (WordToOccurrenceWrapper diGram : diGramsSortedTemp) {
+			diGramsSorted.put(diGram.getWord(), index);
+			index++;
+		}
+
+		index = 0;
+		for (WordToOccurrenceWrapper triGram : triGramsSortedTemp) {
+			triGramsSorted.put(triGram.getWord(), index);
+			index++;
 		}
 	}
 
@@ -77,4 +97,12 @@ public class NgramStatistics {
 		}
 	}
 
+
+	public Map<String, Integer> getDiGramsSorted() {
+		return diGramsSorted;
+	}
+
+	public Map<String, Integer> getTriGramsSorted() {
+		return triGramsSorted;
+	}
 }
