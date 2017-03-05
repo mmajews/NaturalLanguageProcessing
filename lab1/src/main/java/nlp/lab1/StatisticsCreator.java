@@ -69,7 +69,6 @@ public class StatisticsCreator {
 		processFilesAndAddWordsToMap(languageToSentence, Language.POLISH, polishSourceFiles, LanguageConstants.REGEX_SENTENCE_SPLIT);
 		processFilesAndAddWordsToMap(languageToSentence, Language.SPANISH, spanishSourceFiles, LanguageConstants.REGEX_SENTENCE_SPLIT);
 
-		long time = System.currentTimeMillis() - start;
 
 		DetectionStatistics detectionStatisticsWordEnglish2 = statisticForLanguageWords(allLanguageStatistics, languageToWord, 2);
 		DetectionStatistics detectionStatisticsWordEnglish3 = statisticForLanguageWords(allLanguageStatistics, languageToWord, 3);
@@ -82,6 +81,7 @@ public class StatisticsCreator {
 		renderResults(detectionStatisticsSentenceEnglish2, detectionStatisticsSentenceEnglish3, detectionStatisticsSentenceEnglish4);
 		renderResults(detectionStatisticsWordEnglish2, detectionStatisticsWordEnglish3, detectionStatisticsWordEnglish4);
 
+		long time = System.currentTimeMillis() - start;
 		System.out.println("Creating statistics took: " + time + " milliseconds");
 	}
 
