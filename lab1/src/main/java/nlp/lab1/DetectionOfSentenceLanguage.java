@@ -4,7 +4,7 @@ import nlp.lab1.ngram.statistics.EuklidesMetrics;
 import nlp.lab1.ngram.statistics.LanguageDetector;
 import nlp.lab1.ngram.statistics.Metrics;
 
-public class Main {
+public class DetectionOfSentenceLanguage {
 	public static void main(String[] args) {
 		AllLanguageStatistics allLanguageStatistics = new AllLanguageStatistics();
 		allLanguageStatistics.generateStatistics();
@@ -17,9 +17,7 @@ public class Main {
 
 		Metrics metrics = new EuklidesMetrics();
 		LanguageDetector languageDetector = new LanguageDetector(allLanguageStatistics, toBeDetected, metrics);
-		languageDetector.detectLanguageUsingDiGrams();
-		System.out.println();
-		languageDetector.detectLanguageUsingTriGrams();
+		languageDetector.detectLanguageUsingNGrams(4);
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Detection took: " + time + " miliseconds");

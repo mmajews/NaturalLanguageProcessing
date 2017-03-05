@@ -7,7 +7,7 @@ class WordToOccurrenceWrapper {
 	private Double occurrenceNumber;
 	private int index;
 
-	public WordToOccurrenceWrapper(String word, Double occurrenceNumber) {
+	WordToOccurrenceWrapper(String word, Double occurrenceNumber) {
 		this.word = word;
 		this.occurrenceNumber = occurrenceNumber;
 	}
@@ -18,11 +18,11 @@ class WordToOccurrenceWrapper {
 		this.index = index;
 	}
 
-	public String getWord() {
+	String getWord() {
 		return word;
 	}
 
-	public Double getOccurrenceNumber() {
+	Double getOccurrenceNumber() {
 		return occurrenceNumber;
 	}
 

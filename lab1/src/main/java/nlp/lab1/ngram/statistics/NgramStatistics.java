@@ -13,10 +13,15 @@ public class NgramStatistics {
 	private int numberOfLetterInAlphabet;
 	private String nameOfLanguage;
 	private List<NGramWord> nGramWordList = new ArrayList<>();
+
+	private Map<Integer, Map<String, Integer>> nGramsSorted = new HashMap<>();
 	private Map<String, Integer> diGramsSorted = new HashMap<>();
 	private Map<String, Integer> triGramsSorted = new HashMap<>();
+	private Map<String, Integer> fourGramsSorted = new HashMap<>();
+
 	private Map<String, Double> wordToOccurrenceDiGram = new HashMap<>();
 	private Map<String, Double> wordToOccurrenceTriGram = new HashMap<>();
+	private Map<String, Double> wordToOccurrenceFourGram = new HashMap<>();
 
 	public NgramStatistics(String nameOfLanguage, int numberOfLetterInAlphabet) {
 		this.numberOfLetterInAlphabet = numberOfLetterInAlphabet;
@@ -38,71 +43,55 @@ public class NgramStatistics {
 		return Arrays.asList(slicedContentByWords);
 	}
 
-	public void updateNGramWordStatistics(List<File> englishSourceFiles) {
-		for (File sourceFile : englishSourceFiles) {
+	public void updateNGramWordStatistics(List<File> sourceFiles) {
+		for (File sourceFile : sourceFiles) {
 			String contentOfFile = FileReader.getContentOfFile(sourceFile);
 			updateNGramWordStatistics(contentOfFile);
 		}
 		processAndSortElements();
 	}
 
-	public void processAndSortElements() {
-		for (NGramWord nGramWord : nGramWordList) {
-			updateDiGrams(nGramWord);
-			updateTriGrams(nGramWord);
+	private void createSortedSetAndAddToMapWithIndex(Map<String, Double> wordsToOccurrence, Map<String, Integer> sorted) {
+		TreeSet<WordToOccurrenceWrapper> nGramsSorted = new TreeSet<>(new WordToOccurenceWrapperReverseComparator());
+		for (Map.Entry<String, Double> wordToOccurrence : wordsToOccurrence.entrySet()) {
+			nGramsSorted.add(new WordToOccurrenceWrapper(wordToOccurrence.getKey(), wordToOccurrence.getValue()));
 		}
-
-		TreeSet<WordToOccurrenceWrapper> diGramsSortedTemp = new TreeSet<>(new WordToOccurenceWrapperReverseComparator());
-		TreeSet<WordToOccurrenceWrapper> triGramsSortedTemp = new TreeSet<>(new WordToOccurenceWrapperReverseComparator());
-		for (Map.Entry<String, Double> wordToOccurence : wordToOccurrenceDiGram.entrySet()) {
-			diGramsSortedTemp.add(new WordToOccurrenceWrapper(wordToOccurence.getKey(), wordToOccurence.getValue()));
-		}
-
-		for (Map.Entry<String, Double> wordToOccurence : wordToOccurrenceTriGram.entrySet()) {
-			triGramsSortedTemp.add(new WordToOccurrenceWrapper(wordToOccurence.getKey(), wordToOccurence.getValue()));
-		}
-
 		int index = 0;
-		for (WordToOccurrenceWrapper diGram : diGramsSortedTemp) {
-			diGramsSorted.put(diGram.getWord(), index);
-			index++;
-		}
-
-		index = 0;
-		for (WordToOccurrenceWrapper triGram : triGramsSortedTemp) {
-			triGramsSorted.put(triGram.getWord(), index);
+		for (WordToOccurrenceWrapper diGram : nGramsSorted) {
+			sorted.put(diGram.getWord(), index);
 			index++;
 		}
 	}
 
-	private void updateDiGrams(NGramWord nGramWord) {
-		for (Map.Entry<String, Integer> entry : nGramWord.getDigrams().entrySet()) {
-			String digram = entry.getKey();
-			if (wordToOccurrenceDiGram.containsKey(digram)) {
-				wordToOccurrenceDiGram.put(digram, wordToOccurrenceDiGram.get(digram) + entry.getValue());
+	void processAndSortElements() {
+		for (NGramWord nGramWord : nGramWordList) {
+			updateNGrams(nGramWord, wordToOccurrenceDiGram, 2);
+			updateNGrams(nGramWord, wordToOccurrenceTriGram, 3);
+			updateNGrams(nGramWord, wordToOccurrenceFourGram, 4);
+		}
+
+		createSortedSetAndAddToMapWithIndex(wordToOccurrenceDiGram, diGramsSorted);
+		createSortedSetAndAddToMapWithIndex(wordToOccurrenceTriGram, triGramsSorted);
+		createSortedSetAndAddToMapWithIndex(wordToOccurrenceFourGram, fourGramsSorted);
+
+		nGramsSorted.put(2, diGramsSorted);
+		nGramsSorted.put(3, triGramsSorted);
+		nGramsSorted.put(4, fourGramsSorted);
+	}
+
+	private void updateNGrams(NGramWord nGramWord, Map<String, Double> wordToOccurrence, int nGram) {
+		for (Map.Entry<String, Integer> entry : nGramWord.getNGramsMap(nGram).entrySet()) {
+			String currNGramWord = entry.getKey();
+			if (wordToOccurrence.containsKey(currNGramWord)) {
+				wordToOccurrence.put(currNGramWord, wordToOccurrence.get(currNGramWord) + entry.getValue());
 			} else {
-				wordToOccurrenceDiGram.put(digram, Double.valueOf(entry.getValue()));
+				wordToOccurrence.put(currNGramWord, Double.valueOf(entry.getValue()));
 			}
 		}
 	}
 
-	private void updateTriGrams(NGramWord nGramWord) {
-		for (Map.Entry<String, Integer> entry : nGramWord.getTrigrams().entrySet()) {
-			String trigram = entry.getKey();
-			if (wordToOccurrenceTriGram.containsKey(trigram)) {
-				wordToOccurrenceTriGram.put(trigram, wordToOccurrenceTriGram.get(trigram) + entry.getValue());
-			} else {
-				wordToOccurrenceTriGram.put(trigram, Double.valueOf(entry.getValue()));
-			}
-		}
+	Map<String, Integer> getNGramsSorted(int n) {
+		return nGramsSorted.get(n);
 	}
 
-
-	public Map<String, Integer> getDiGramsSorted() {
-		return diGramsSorted;
-	}
-
-	public Map<String, Integer> getTriGramsSorted() {
-		return triGramsSorted;
-	}
 }

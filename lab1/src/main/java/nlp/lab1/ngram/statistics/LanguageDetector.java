@@ -19,28 +19,28 @@ public class LanguageDetector {
 		this.metrics = metrics;
 	}
 
-	public void detectLanguageUsingDiGrams() {
+	public void detectLanguageUsingNGrams(int n) {
 		TreeMap<Double, String> valueToLanguage = new TreeMap<>();
 		NgramStatistics ngramStatisticsForSentence = new NgramStatistics();
 		ngramStatisticsForSentence.updateNGramWordStatistics(toBeDetected);
 		ngramStatisticsForSentence.processAndSortElements();
 
 		List<Double> firstValues = new ArrayList<>();
-		for (Map.Entry<String, Integer> wordToOccurrenceWrapper : ngramStatisticsForSentence.getDiGramsSorted().entrySet()) {
+		for (Map.Entry<String, Integer> wordToOccurrenceWrapper : ngramStatisticsForSentence.getNGramsSorted(n).entrySet()) {
 			firstValues.add((double) wordToOccurrenceWrapper.getValue());
 		}
 
 		for (String language : LanguageConstants.allLanguages) {
 			List<Double> secondValues = new ArrayList<>();
 			NgramStatistics languageStatistics = allLanguageStatistics.getLanguageStatistics().get(language);
-			Map<String, Integer> diGramsSorted = languageStatistics.getDiGramsSorted();
-			for (Map.Entry<String, Integer> wordToValue : ngramStatisticsForSentence.getDiGramsSorted().entrySet()) {
+			Map<String, Integer> nGramsSorted = languageStatistics.getNGramsSorted(2);
+			for (Map.Entry<String, Integer> wordToValue : ngramStatisticsForSentence.getNGramsSorted(2).entrySet()) {
 				String wordToFind = wordToValue.getKey();
 				int i = 0;
-				if (!diGramsSorted.containsKey(wordToFind)) {
+				if (!nGramsSorted.containsKey(wordToFind)) {
 					secondValues.add(PENALTY);
 				} else {
-					secondValues.add(Double.valueOf(diGramsSorted.get(wordToFind)));
+					secondValues.add(Double.valueOf(nGramsSorted.get(wordToFind)));
 				}
 			}
 
@@ -51,36 +51,4 @@ public class LanguageDetector {
 		System.out.println("This sentence is written in : " + valueToLanguage.firstEntry().getValue());
 	}
 
-
-	public void detectLanguageUsingTriGrams() {
-		TreeMap<Double, String> valueToLanguage = new TreeMap<>();
-		NgramStatistics ngramStatisticsForSentence = new NgramStatistics();
-		ngramStatisticsForSentence.updateNGramWordStatistics(toBeDetected);
-		ngramStatisticsForSentence.processAndSortElements();
-
-		List<Double> firstValues = new ArrayList<>();
-		for (Map.Entry<String, Integer> wordToOccurrenceWrapper : ngramStatisticsForSentence.getTriGramsSorted().entrySet()) {
-			firstValues.add((double) wordToOccurrenceWrapper.getValue());
-		}
-
-		for (String language : LanguageConstants.allLanguages) {
-			List<Double> secondValues = new ArrayList<>();
-			NgramStatistics languageStatistics = allLanguageStatistics.getLanguageStatistics().get(language);
-			Map<String, Integer> diGramsSorted = languageStatistics.getTriGramsSorted();
-			for (Map.Entry<String, Integer> wordToValue : ngramStatisticsForSentence.getTriGramsSorted().entrySet()) {
-				String wordToFind = wordToValue.getKey();
-				int i = 0;
-				if (!diGramsSorted.containsKey(wordToFind)) {
-					secondValues.add(PENALTY);
-				} else {
-					secondValues.add(Double.valueOf(diGramsSorted.get(wordToFind)));
-				}
-			}
-
-			double finalValue = metrics.getValue(firstValues, secondValues);
-			valueToLanguage.put(finalValue, language);
-			System.out.println("Detecting for : " + language + " finished. Value for : " + language + ":" + finalValue);
-		}
-		System.out.println("This sentence is written in : " + valueToLanguage.firstEntry().getValue());
-	}
 }

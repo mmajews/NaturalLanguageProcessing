@@ -3,39 +3,42 @@ package nlp.lab1.ngram.statistics;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NGramWord {
+class NGramWord {
 	private final String word;
-	private Map<String, Integer> digrams = new HashMap<>();
-	private Map<String, Integer> trigrams = new HashMap<>();
+	private Map<Integer, Map<String, Integer>> nGramsMap = new HashMap<>();
 
 	NGramWord(String word) {
 		this.word = word;
-		if (word.length() >= 2) {
-			createNGrams(2, digrams);
-		}
-		if (word.length() >= 3) {
-			createNGrams(3, trigrams);
-		}
+		createNGrams(2);
+		createNGrams(3);
+		createNGrams(4);
 	}
 
-	private void createNGrams(int n, Map<String, Integer> mapOfNGrams) {
+	private void createNGrams(int n) {
+		if (word.length() < n) {
+			nGramsMap.put(n, new HashMap<>());
+		}
+		Map<String, Integer> mapOfNGrams = nGramsMap.get(n);
+		if (mapOfNGrams == null) {
+			nGramsMap.put(n, new HashMap<>());
+		}
+		mapOfNGrams = nGramsMap.get(n);
+
 		int length = word.length();
-		//fixme maybe add padding?
+		//fixme maybe add padding? do not know really
 		for (int i = 0; i + n < length + 1; i++) {
 			String ngram = word.substring(i, i + n);
 			if (mapOfNGrams.containsKey(ngram)) {
 				mapOfNGrams.put(ngram, mapOfNGrams.get(ngram) + 1);
-			} else{
+			} else {
 				mapOfNGrams.put(ngram, 1);
 			}
 		}
+
+		nGramsMap.put(n, mapOfNGrams);
 	}
 
-	public Map<String, Integer> getDigrams() {
-		return digrams;
-	}
-
-	public Map<String, Integer> getTrigrams() {
-		return trigrams;
+	public Map<String, Integer> getNGramsMap(int n) {
+		return nGramsMap.get(n);
 	}
 }
