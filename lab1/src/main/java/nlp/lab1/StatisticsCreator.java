@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap;
 import de.vandermeer.asciitable.v2.RenderedTable;
 import de.vandermeer.asciitable.v2.V2_AsciiTable;
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
+import de.vandermeer.asciitable.v2.render.WidthLongestLine;
 import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 import nlp.lab1.ngram.statistics.EuklidesMetrics;
 import nlp.lab1.ngram.statistics.FileReader;
@@ -101,6 +102,7 @@ public class StatisticsCreator {
 		at.addRule();
 		V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
 		rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
+		rend.setWidth(new WidthLongestLine());
 		RenderedTable rt = rend.render(at);
 		System.out.println(rt);
 	}
