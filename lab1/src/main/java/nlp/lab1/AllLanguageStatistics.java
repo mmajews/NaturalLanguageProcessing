@@ -1,6 +1,7 @@
 package nlp.lab1;
 
 import com.google.common.collect.Lists;
+import nlp.lab1.ngram.statistics.Language;
 import nlp.lab1.ngram.statistics.NgramStatistics;
 
 import java.io.File;
@@ -8,18 +9,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static nlp.lab1.ngram.statistics.LanguageConstants.ENGLISH;
-import static nlp.lab1.ngram.statistics.LanguageConstants.FINNISH;
-import static nlp.lab1.ngram.statistics.LanguageConstants.GERMAN;
-import static nlp.lab1.ngram.statistics.LanguageConstants.ITALIAN;
-import static nlp.lab1.ngram.statistics.LanguageConstants.POLISH;
-import static nlp.lab1.ngram.statistics.LanguageConstants.SPANISH;
+import static nlp.lab1.ngram.statistics.Language.ENGLISH;
+import static nlp.lab1.ngram.statistics.Language.FINNISH;
+import static nlp.lab1.ngram.statistics.Language.GERMAN;
+import static nlp.lab1.ngram.statistics.Language.ITALIAN;
+import static nlp.lab1.ngram.statistics.Language.POLISH;
+import static nlp.lab1.ngram.statistics.Language.SPANISH;
 
 public class AllLanguageStatistics {
 
-	private Map<String, NgramStatistics> languageStatistics = new HashMap<>();
+	private Map<Language, NgramStatistics> languageStatistics = new HashMap<>();
 
-	public Map<String, NgramStatistics> getLanguageStatistics() {
+	public Map<Language, NgramStatistics> getLanguageStatistics() {
 		return languageStatistics;
 	}
 

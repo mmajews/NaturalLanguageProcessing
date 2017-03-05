@@ -11,7 +11,7 @@ import java.util.TreeSet;
 public class NgramStatistics {
 	private static final String REGEX_WORD_SPLIT = "[,.!? \":\n\r-]+";
 	private int numberOfLetterInAlphabet;
-	private String nameOfLanguage;
+	private Language nameOfLanguage;
 	private List<NGramWord> nGramWordList = new ArrayList<>();
 
 	private Map<Integer, Map<String, Integer>> nGramsSorted = new HashMap<>();
@@ -23,15 +23,15 @@ public class NgramStatistics {
 	private Map<String, Double> wordToOccurrenceTriGram = new HashMap<>();
 	private Map<String, Double> wordToOccurrenceFourGram = new HashMap<>();
 
-	public NgramStatistics(String nameOfLanguage, int numberOfLetterInAlphabet) {
+	public NgramStatistics(Language language, int numberOfLetterInAlphabet) {
 		this.numberOfLetterInAlphabet = numberOfLetterInAlphabet;
-		this.nameOfLanguage = nameOfLanguage;
+		this.nameOfLanguage = language;
 	}
 
-	public NgramStatistics() {
+	NgramStatistics() {
 	}
 
-	public void updateNGramWordStatistics(String content) {
+	void updateNGramWordStatistics(String content) {
 		List<String> allWordsInText = splitContentToListOfWords(content);
 		for (String word : allWordsInText) {
 			nGramWordList.add(new NGramWord(word));

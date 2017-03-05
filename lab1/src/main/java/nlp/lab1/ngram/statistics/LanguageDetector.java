@@ -19,8 +19,8 @@ public class LanguageDetector {
 		this.metrics = metrics;
 	}
 
-	public void detectLanguageUsingNGrams(int n) {
-		TreeMap<Double, String> valueToLanguage = new TreeMap<>();
+	public Language detectLanguageUsingNGrams(int n) {
+		TreeMap<Double, Language> valueToLanguage = new TreeMap<>();
 		NgramStatistics ngramStatisticsForSentence = new NgramStatistics();
 		ngramStatisticsForSentence.updateNGramWordStatistics(toBeDetected);
 		ngramStatisticsForSentence.processAndSortElements();
@@ -30,7 +30,7 @@ public class LanguageDetector {
 			firstValues.add((double) wordToOccurrenceWrapper.getValue());
 		}
 
-		for (String language : LanguageConstants.allLanguages) {
+		for (Language language : Language.values()) {
 			List<Double> secondValues = new ArrayList<>();
 			NgramStatistics languageStatistics = allLanguageStatistics.getLanguageStatistics().get(language);
 			Map<String, Integer> nGramsSorted = languageStatistics.getNGramsSorted(2);
@@ -48,7 +48,9 @@ public class LanguageDetector {
 			valueToLanguage.put(finalValue, language);
 			System.out.println("Detecting for : " + language + " finished. Value for : " + language + ":" + finalValue);
 		}
-		System.out.println("This sentence is written in : " + valueToLanguage.firstEntry().getValue());
+		final Language detectedLanguage = valueToLanguage.firstEntry().getValue();
+		System.out.println("This sentence is written in : " + detectedLanguage);
+		return detectedLanguage;
 	}
 
 }
