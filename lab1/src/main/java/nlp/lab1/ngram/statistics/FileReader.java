@@ -7,11 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-class FileReader {
+public class FileReader {
 
 	private static final Logger logger = Logger.getLogger(FileReader.class.getName());
 
-	static String getContentOfFile(File sourceFile){
+	public static String getContentOfFile(File sourceFile) {
 		Preconditions.checkArgument(sourceFile.exists(), "File does not exist!");
 		String wholeFile = null;
 		try {

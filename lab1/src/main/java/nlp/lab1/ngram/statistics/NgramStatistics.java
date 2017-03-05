@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import static nlp.lab1.ngram.statistics.LanguageConstants.REGEX_WORD_SPLIT;
+
 public class NgramStatistics {
-	private static final String REGEX_WORD_SPLIT = "[,.!? \":\n\r-]+";
 	private int numberOfLetterInAlphabet;
 	private Language nameOfLanguage;
 	private List<NGramWord> nGramWordList = new ArrayList<>();

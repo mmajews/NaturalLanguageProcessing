@@ -17,7 +17,7 @@ public class DetectionOfSentenceLanguage {
 
 		Metrics metrics = new EuklidesMetrics();
 		LanguageDetector languageDetector = new LanguageDetector(allLanguageStatistics, toBeDetected, metrics);
-		languageDetector.detectLanguageUsingNGrams(4);
+		languageDetector.detectLanguageUsingNGrams(4, false);
 
 		long time = System.currentTimeMillis() - start;
 		System.out.println("Detection took: " + time + " miliseconds");

@@ -84,7 +84,7 @@ public class AllLanguageStatistics {
 		System.out.println("Generating took: " + time / 1000 + " seconds");
 	}
 
-	private static String getFileFromResourceFolder(String fileName) {
+	public static String getFileFromResourceFolder(String fileName) {
 		return Thread.currentThread().getContextClassLoader().getResource(fileName).getFile();
 	}
 
