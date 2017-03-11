@@ -1,12 +1,15 @@
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import metrics.LCSMetricsDBSCAN;
+import org.apache.commons.io.FileUtils;
 import org.christopherfrantz.dbscan.DBSCANClusterer;
 import org.christopherfrantz.dbscan.DBSCANClusteringException;
+import org.christopherfrantz.dbscan.DistanceMetric;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,14 +31,17 @@ class Clusterizer {
         List<String> allElements = getSlicedContentBySep(file, regexSeparator).stream()
                 .map(Clusterizer::processElement)
                 .collect(Collectors.toList());
-
-
         logger.info("Number of elements: {}", allElements.size());
 
-        LCSMetricsDBSCAN lcsMetricsDBSCAN = new LCSMetricsDBSCAN();
+        testMetrics(new File("/Users/mmajewski/LCS.output"), allElements, new LCSMetricsDBSCAN());
+
+        logger.info("Testing done!");
+    }
+
+    private static void testMetrics(File outputFile, List<String> allElements, DistanceMetric<String> distanceMetric) {
         DBSCANClusterer<String> dbscanClusterer = null;
         try {
-            dbscanClusterer = new DBSCANClusterer<>(allElements, 5, 0.10, lcsMetricsDBSCAN);
+            dbscanClusterer = new DBSCANClusterer<>(allElements, 5, 0.10, distanceMetric);
         } catch (DBSCANClusteringException e) {
             e.printStackTrace();
         }
@@ -45,8 +51,21 @@ class Clusterizer {
         } catch (DBSCANClusteringException e) {
             e.printStackTrace();
         }
+        try {
+            outputToFile(outputFile, clusters);
+        } catch (IOException error) {
+            logger.error("Problem with writing to file !", error);
+        }
+    }
 
-        logger.info("Done counting distances to other elements!");
+    private static void outputToFile(File outputFile, List<ArrayList<String>> clusters) throws IOException {
+        for (ArrayList<String> cluster : clusters) {
+            FileUtils.writeStringToFile(outputFile, "#########################");
+            FileUtils.writeStringToFile(outputFile, System.lineSeparator());
+            for (String string : cluster) {
+                FileUtils.writeStringToFile(outputFile, string);
+            }
+        }
     }
 
     private static List<String> getSlicedContentBySep(File file, String regexSeparator) {
