@@ -1,11 +1,14 @@
 package metrics;
 
 
-public class LevenshteinMetrics implements Metrics {
+import org.christopherfrantz.dbscan.DBSCANClusteringException;
+import org.christopherfrantz.dbscan.DistanceMetric;
+
+public class LevenshteinMetrics implements DistanceMetric<String> {
 
     @Override
-    public double getValue(String firstWord, String secondWord) {
-        return (double) levenshteinDistance(firstWord, secondWord);
+    public double calculateDistance(String s, String v1) throws DBSCANClusteringException {
+        return levenshteinDistance(s, v1);
     }
 
     private int levenshteinDistance(CharSequence lhs, CharSequence rhs) {
