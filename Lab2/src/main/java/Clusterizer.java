@@ -39,18 +39,20 @@ class Clusterizer {
     }
 
     private static void testMetrics(File outputFile, List<String> allElements, DistanceMetric<String> distanceMetric) {
-        DBSCANClusterer<String> dbscanClusterer = null;
-        try {
-            dbscanClusterer = new DBSCANClusterer<>(allElements, 5, 0.10, distanceMetric);
-        } catch (DBSCANClusteringException e) {
-            e.printStackTrace();
-        }
+        DBSCANClusterer<String> clusterer;
         List<ArrayList<String>> clusters = null;
+
         try {
-            clusters = dbscanClusterer.performClustering();
-        } catch (DBSCANClusteringException e) {
-            e.printStackTrace();
+            clusterer = new DBSCANClusterer<>(allElements, 5, 0.10, distanceMetric);
+            clusters = clusterer.performClustering();
+        } catch (DBSCANClusteringException error) {
+            logger.error("Error while clustering!", error);
         }
+
+        writeOutputToFile(outputFile, clusters);
+    }
+
+    private static void writeOutputToFile(File outputFile, List<ArrayList<String>> clusters) {
         try {
             outputToFile(outputFile, clusters);
         } catch (IOException error) {
