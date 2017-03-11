@@ -74,11 +74,11 @@ public class StatisticsCreator {
 		DetectionStatistics detectionStatisticsWordEnglish3 = statisticForLanguageWords(allLanguageStatistics, languageToWord, 3);
 		DetectionStatistics detectionStatisticsWordEnglish4 = statisticForLanguageWords(allLanguageStatistics, languageToWord, 4);
 
-		DetectionStatistics detectionStatisticsSentenceEnglish2 = statisticForLanguageWords(allLanguageStatistics, languageToSentence, 2);
-		DetectionStatistics detectionStatisticsSentenceEnglish3 = statisticForLanguageWords(allLanguageStatistics, languageToSentence, 3);
-		DetectionStatistics detectionStatisticsSentenceEnglish4 = statisticForLanguageWords(allLanguageStatistics, languageToSentence, 4);
+//		DetectionStatistics detectionStatisticsSentenceEnglish2 = statisticForLanguageWords(allLanguageStatistics, languageToSentence, 2);
+//		DetectionStatistics detectionStatisticsSentenceEnglish3 = statisticForLanguageWords(allLanguageStatistics, languageToSentence, 3);
+//		DetectionStatistics detectionStatisticsSentenceEnglish4 = statisticForLanguageWords(allLanguageStatistics, languageToSentence, 4);
 
-		renderResults(detectionStatisticsSentenceEnglish2, detectionStatisticsSentenceEnglish3, detectionStatisticsSentenceEnglish4);
+//		renderResults(detectionStatisticsSentenceEnglish2, detectionStatisticsSentenceEnglish3, detectionStatisticsSentenceEnglish4);
 		renderResults(detectionStatisticsWordEnglish2, detectionStatisticsWordEnglish3, detectionStatisticsWordEnglish4);
 
 		long time = System.currentTimeMillis() - start;
@@ -112,8 +112,8 @@ public class StatisticsCreator {
 		Collection<String> others = languageToWord.get(Language.FINNISH);
 		others.addAll(languageToWord.get(Language.GERMAN));
 		others.addAll(languageToWord.get(Language.POLISH));
-		others.addAll(languageToWord.get(Language.SPANISH));
-		return new DetectionStatistics(languageToWord.get(Language.ENGLISH), others, allLanguageStatistics, Language.ENGLISH, ngrams, new EuklidesMetrics());
+		others.addAll(languageToWord.get(Language.ENGLISH));
+		return new DetectionStatistics(languageToWord.get(Language.SPANISH), others, allLanguageStatistics, Language.ENGLISH, ngrams, new EuklidesMetrics());
 	}
 
 	private static Multimap<Language, String> processFilesAndAddWordsToMap(Multimap<Language, String> multimap, Language language, List<File> files,

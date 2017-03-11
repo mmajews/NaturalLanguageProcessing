@@ -8,7 +8,7 @@ class NGramWord {
 	private Map<Integer, Map<String, Integer>> nGramsMap = new HashMap<>();
 
 	NGramWord(String word) {
-		this.word = word;
+		this.word = word.toLowerCase();
 		createNGrams(2);
 		createNGrams(3);
 		createNGrams(4);
