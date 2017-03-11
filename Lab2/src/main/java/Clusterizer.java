@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -49,24 +48,20 @@ class Clusterizer {
             logger.error("Error while clustering!", error);
         }
 
-        writeOutputToFile(outputFile, clusters);
+        outputToFile(outputFile, clusters);
     }
 
-    private static void writeOutputToFile(File outputFile, List<ArrayList<String>> clusters) {
+    private static void outputToFile(File outputFile, List<ArrayList<String>> clusters) {
         try {
-            outputToFile(outputFile, clusters);
-        } catch (IOException error) {
-            logger.error("Problem with writing to file !", error);
-        }
-    }
-
-    private static void outputToFile(File outputFile, List<ArrayList<String>> clusters) throws IOException {
-        for (ArrayList<String> cluster : clusters) {
-            FileUtils.writeStringToFile(outputFile, "#########################");
-            FileUtils.writeStringToFile(outputFile, System.lineSeparator());
-            for (String string : cluster) {
-                FileUtils.writeStringToFile(outputFile, string);
+            for (ArrayList<String> cluster : clusters) {
+                FileUtils.writeStringToFile(outputFile, "#########################");
+                FileUtils.writeStringToFile(outputFile, System.lineSeparator());
+                for (String string : cluster) {
+                    FileUtils.writeStringToFile(outputFile, string);
+                }
             }
+        } catch (Exception ex) {
+            logger.error("Error while writing output to file!", ex);
         }
     }
 
