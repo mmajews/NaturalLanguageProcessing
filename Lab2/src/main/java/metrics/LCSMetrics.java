@@ -3,7 +3,7 @@ package metrics;
 import org.christopherfrantz.dbscan.DBSCANClusteringException;
 import org.christopherfrantz.dbscan.DistanceMetric;
 
-public class LCSMetricsDBSCAN implements DistanceMetric<String> {
+public class LCSMetrics implements DistanceMetric<String> {
 
     @Override
     public double calculateDistance(String aDouble, String v1) throws DBSCANClusteringException {
