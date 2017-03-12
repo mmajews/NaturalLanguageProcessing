@@ -42,6 +42,11 @@
             <artifactId>slf4j-binding</artifactId>
             <version>${tinylog.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.vandermeer</groupId>
+            <artifactId>asciitable</artifactId>
+            <version>0.2.5</version>
+        </dependency>
 
     </dependencies>
 
