@@ -39,9 +39,9 @@ class Clusterizer {
                 .collect(Collectors.toList());
         logger.info("Number of elements: {}", allElements.size());
 
-        List<ArrayList<String>> LCSClusters = testMetrics(new File("/Users/mmajewski/LCS.output"), allElements, new LCSMetrics(), 5, 0.10);
+        List<ArrayList<String>> LCSClusters = testMetrics(new File("LCS.output"), allElements, new LCSMetrics(), 5, 0.10);
         logger.info("Clusters for LSC done");
-        List<ArrayList<String>> LevenshteinClusters = testMetrics(new File("/Users/mmajewski/Levenshtein.output"), allElements, new LevenshteinMetrics(), 5, 10);
+        List<ArrayList<String>> LevenshteinClusters = testMetrics(new File("Levenshtein.output"), allElements, new LevenshteinMetrics(), 5, 10);
         logger.info("Clusters for Levenshtein done");
 
         printStatistics(LCSClusters, new LCSMetrics());
