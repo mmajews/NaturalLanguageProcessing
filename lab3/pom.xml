@@ -7,6 +7,53 @@
     <groupId>lab3</groupId>
     <artifactId>lab3</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
+    <dependencies>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tinylog</groupId>
+            <artifactId>tinylog</artifactId>
+            <version>${tinylog.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tinylog</groupId>
+            <artifactId>slf4j-binding</artifactId>
+            <version>${tinylog.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.vandermeer</groupId>
+            <artifactId>asciitable</artifactId>
+            <version>${asciitable.version}</version>
+        </dependency>
+    </dependencies>
 
+    <properties>
+        <commons-io.version>2.5</commons-io.version>
+        <guava.version>21.0</guava.version>
+        <tinylog.version>1.2</tinylog.version>
+        <commons-lang3.version>3.5</commons-lang3.version>
+        <commons-text.version>1.0-SNAPSHOT</commons-text.version>
+        <asciitable.version>0.2.5</asciitable.version>
+    </properties>
 </project>
