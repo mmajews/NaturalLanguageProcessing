@@ -1,4 +1,4 @@
-package pl.agh.edu.nlp;
+package pl.agh.edu.nlp.model;
 
 import java.util.Objects;
 

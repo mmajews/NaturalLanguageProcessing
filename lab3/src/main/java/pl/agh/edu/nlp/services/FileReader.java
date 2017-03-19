@@ -1,4 +1,4 @@
-package pl.agh.edu.nlp;
+package pl.agh.edu.nlp.services;
 
 import com.google.common.base.Preconditions;
 import org.apache.commons.io.FileUtils;

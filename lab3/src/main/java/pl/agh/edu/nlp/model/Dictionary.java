@@ -1,7 +1,8 @@
-package pl.agh.edu.nlp;
+package pl.agh.edu.nlp.model;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.agh.edu.nlp.services.FileReader;
 
 import java.io.File;
 import java.util.Arrays;
@@ -9,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static pl.agh.edu.nlp.StringHelper.trimCleanUpperCase;
+import static pl.agh.edu.nlp.services.StringHelper.trimCleanUpperCase;
 
 public class Dictionary {
 	private static final Logger logger = LoggerFactory.getLogger(Dictionary.class);

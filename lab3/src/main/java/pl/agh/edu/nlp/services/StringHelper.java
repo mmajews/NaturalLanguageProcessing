@@ -1,4 +1,4 @@
-package pl.agh.edu.nlp;
+package pl.agh.edu.nlp.services;
 
 /**
  * Created by mmajewski on 19.03.2017.
