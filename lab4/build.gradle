@@ -19,4 +19,5 @@ dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '21.0'
     compile group: 'org.tinylog', name: 'tinylog', version: '1.2'
     compile group: 'org.tinylog', name: 'slf4j-binding', version: '1.2'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
 }
