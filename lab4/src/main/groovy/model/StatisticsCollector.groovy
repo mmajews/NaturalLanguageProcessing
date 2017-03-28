@@ -5,7 +5,6 @@ import metrics.LevensteinCounter
 import org.apache.commons.lang3.StringUtils
 import org.eclipse.collections.impl.factory.Lists
 import org.eclipse.collections.impl.factory.Maps
-import org.eclipse.collections.impl.list.mutable.SynchronizedMutableList
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -77,7 +76,7 @@ class StatisticsCollector {
         }
 
         logger.info("Correction for $wordToCorrect found: $mostChanceCandidate", wordToCorrect)
-        mostChanceCandidate
+        mostChanceCandidate == "" ? wordToCorrect : mostChanceCandidate
     }
 
     private getWordChance(String similarWord) {
@@ -104,11 +103,10 @@ class StatisticsCollector {
 
     private List findWordSimilarInLevensteinMetrics(String word, double n) {
         def similarWords = Lists.mutable.empty()
-        similarWords = SynchronizedMutableList.of(similarWords)
 
-        wordToOccurrence.keySet().parallelStream().each { element ->
+        wordToOccurrence.keySet().stream().each { element ->
             def ldCounter = new LevensteinCounter()
-            double levensteinMetrics = ldCounter.getLD(element as String, word)
+            double levensteinMetrics = ldCounter.getLD(element as String, word, 1)
             if (levensteinMetrics < n) {
                 similarWords.add([element: element, metrics: levensteinMetrics])
             }

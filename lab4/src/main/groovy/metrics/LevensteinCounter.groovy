@@ -27,7 +27,7 @@ class LevensteinCounter {
         mistakesMap.put("dz", ["dż", "dź"])
     }
 
-    double getLD(String a, String b) {
+    double getLD(String a, String b, double maximum) {
         a = a.toLowerCase()
         b = b.toLowerCase()
         int metric = POLISH_METRIC
@@ -42,7 +42,7 @@ class LevensteinCounter {
         initDistances(metric, aLength)
         int layersDone = 2
 
-        if (Math.abs(aLength - bLength) > 2) {
+        if (Math.abs(aLength - bLength) > maximum) {
             return Double.MAX_VALUE
         }
 
