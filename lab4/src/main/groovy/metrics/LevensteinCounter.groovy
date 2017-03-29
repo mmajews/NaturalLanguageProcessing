@@ -139,7 +139,7 @@ class LevensteinCounter {
     }
 
     private static boolean isSwapMistake(String a, String b) {
-        return a == new StringBuilder(b).reverse().toString()
+        return a == b.reverse()
     }
 
 }
