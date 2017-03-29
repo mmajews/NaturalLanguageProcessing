@@ -9,7 +9,7 @@ class Main {
     static void main(String[] args) {
         logger.info("Starting app...")
         StatisticsCollector statisticsCollector = new StatisticsCollector();
-        final resourcesPath = "C:\\Development\\Repos\\NaturalLanguageProcessing\\lab4\\src\\main\\resources"
+        final resourcesPath = "/Users/mmajewski/Development/Studies/NaturalLanguageProcessing/lab4/src/main/resources"
         resourcesPath.normalize()
         statisticsCollector.appendFileToDictionary(new File((resourcesPath + "/dramat.txt").normalize()))
         statisticsCollector.appendFileToDictionary(new File((resourcesPath + "/formy.txt").normalize()))
@@ -18,6 +18,6 @@ class Main {
         statisticsCollector.appendFileToDictionary(new File((resourcesPath + "/publ.txt").normalize()))
         statisticsCollector.appendFileToDictionary(new File((resourcesPath + "/wp.txt").normalize()))
 
-        statisticsCollector.getFileWithFixedWords(new File((resourcesPath + "/bledy.txt").normalize()))
+        statisticsCollector.getFileWithFixedWords(new File((resourcesPath + "/bledy1.txt").normalize()))
     }
 }
