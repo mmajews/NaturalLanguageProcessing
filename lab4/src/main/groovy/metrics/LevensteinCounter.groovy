@@ -28,13 +28,17 @@ class LevensteinCounter {
     }
 
     double getLD(String a, String b, double maximum) {
+        def aLength = a.length()
+        def bLength = b.length()
+        if (Math.abs(aLength - bLength) > maximum) {
+            return Double.MAX_VALUE
+        }
+
         a = a.toLowerCase()
         b = b.toLowerCase()
         int metric = POLISH_METRIC
         if ((a == null && b == null))
             return 0
-        def aLength = a.length()
-        def bLength = b.length()
         if (a == null || aLength == 0)
             return bLength
         if (b == null || bLength == 0)
@@ -42,9 +46,6 @@ class LevensteinCounter {
         initDistances(metric, aLength)
         int layersDone = 2
 
-        if (Math.abs(aLength - bLength) > maximum) {
-            return Double.MAX_VALUE
-        }
 
         for (int i = 0; i < bLength; i++) {
             for (int j = 0; j < aLength; j++) {

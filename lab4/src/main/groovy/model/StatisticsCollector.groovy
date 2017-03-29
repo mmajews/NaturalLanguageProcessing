@@ -2,20 +2,22 @@ package model
 
 import com.google.common.base.Preconditions
 import metrics.LevensteinCounter
-import org.apache.commons.lang3.StringUtils
 import org.eclipse.collections.impl.factory.Lists
 import org.eclipse.collections.impl.factory.Maps
 import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+import java.util.concurrent.atomic.AtomicInteger
+
 class StatisticsCollector {
+    private static def counter = new AtomicInteger(0);
     private static Logger logger = LoggerFactory.getLogger(StatisticsCollector.class)
     private static WORD_REGEX = "\\s+"
     private static NON_LETTERS = "^[^a-zA-Z0-9\\\\s]+|[^a-zA-Z0-9\\\\s]+\$"
     public static final int INITIAL_CAPACITY = 16000
     private long occurenceOfAllWords = 0d;
-    public static final double MAXIMUM_LEVENSTEIN_DISTANCE = 2
+    public static final double MAXIMUM_LEVENSTEIN_DISTANCE = 1.5
     private def wordToOccurrence = Maps.mutable.empty();
 
     void appendFileToDictionary(File inputFile) {
@@ -26,8 +28,8 @@ class StatisticsCollector {
                 .stream()
                 .map { el -> el.toUpperCase() }
                 .map { el -> el.trim() }
-                .map { el -> el.replaceAll(NON_LETTERS, "") }
-                .filter { el -> StringUtils.isAlpha(el) }
+//                .map { el -> el.replaceAll(NON_LETTERS, "") }
+//                .filter { el -> StringUtils.isAlpha(el) }
                 .forEach { word ->
             addWordToMap(word)
             occurenceOfAllWords++
@@ -40,8 +42,14 @@ class StatisticsCollector {
         def outputFile = new File("output.txt")
         outputFile.createNewFile()
         def fixedWords = fixWords(inputFile)
-        fixedWords.each {
-            k, v -> outputFile.append("$k;$v\n\r")
+
+        def listOfLines = Lists.mutable.empty()
+
+        for (def entry : fixedWords.entrySet()) {
+            listOfLines.add(entry.key + ";" + entry.value + "\n\r")
+        }
+        listOfLines.sort().each {
+            line -> outputFile.append(line)
         }
         outputFile
     }
@@ -54,14 +62,20 @@ class StatisticsCollector {
             el -> wordsToFix.add(el.split(";")[0].toUpperCase())
         }
 
-        wordsToFix.parallelStream().each {
-            el -> fixedWords.put(el as String, correctWord(el as String))
-        }
+        wordsToFix.parallelStream().forEach({
+            el ->
+                fixedWords.put(el as String, correctWord(el as String))
+                counter.incrementAndGet()
+                def sizeOfMap = wordsToFix.size()
+                logger.info("Progress $counter / $sizeOfMap")
+//                println Thread.currentThread().id
+        })
         fixedWords
     }
 
     private String correctWord(String wordToCorrect) {
-        def similarWords = findSimilarWords(wordToCorrect)
+        def similarWords = findWordSimilarInLevensteinMetrics(wordToCorrect, MAXIMUM_LEVENSTEIN_DISTANCE)
+
 
         double maximumChance = 0d
         def mostChanceCandidate = "";
@@ -75,21 +89,13 @@ class StatisticsCollector {
             }
         }
 
-        logger.info("Correction for $wordToCorrect found: $mostChanceCandidate", wordToCorrect)
         mostChanceCandidate == "" ? wordToCorrect : mostChanceCandidate
+//        logger.info("Correction for $wordToCorrect found: $mostChanceCandidate", wordToCorrect)
+        mostChanceCandidate
     }
 
     private getWordChance(String similarWord) {
         (double) wordToOccurrence.get(similarWord) / (double) occurenceOfAllWords
-    }
-
-    private List findSimilarWords(String wordToCorrect) {
-        findWordSimilarInLevensteinMetrics(wordToCorrect, MAXIMUM_LEVENSTEIN_DISTANCE)
-//        def i = 1
-//        while (similarWords.size() == 0) {
-//            similarWords = findWordSimilarInLevensteinMetrics(wordToCorrect, MAXIMUM_LEVENSTEIN_DISTANCE + 1)
-//            i++
-//        }
     }
 
     private void addWordToMap(String word) {
@@ -102,15 +108,17 @@ class StatisticsCollector {
 
 
     private List findWordSimilarInLevensteinMetrics(String word, double n) {
-        def similarWords = Lists.mutable.empty()
+        def similarWords = Collections.synchronizedList(Lists.mutable.empty())
 
-        wordToOccurrence.keySet().stream().each { element ->
+        wordToOccurrence.keySet().parallelStream().forEach({ element ->
+//            println Thread.currentThread().id
             def ldCounter = new LevensteinCounter()
             double levensteinMetrics = ldCounter.getLD(element as String, word, 1)
             if (levensteinMetrics < n) {
                 similarWords.add([element: element, metrics: levensteinMetrics])
             }
         }
+        )
         similarWords
     }
 

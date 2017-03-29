@@ -9,7 +9,7 @@ class Main {
     static void main(String[] args) {
         logger.info("Starting app...")
         StatisticsCollector statisticsCollector = new StatisticsCollector();
-        final resourcesPath = "/Users/mmajewski/Development/Studies/NaturalLanguageProcessing/lab4/src/main/resources"
+        final resourcesPath = "C:\\Development\\Repos\\NaturalLanguageProcessing\\lab4\\src\\main\\resources"
         resourcesPath.normalize()
         statisticsCollector.appendFileToDictionary(new File((resourcesPath + "/dramat.txt").normalize()))
         statisticsCollector.appendFileToDictionary(new File((resourcesPath + "/formy.txt").normalize()))
