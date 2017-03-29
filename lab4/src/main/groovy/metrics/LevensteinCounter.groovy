@@ -47,26 +47,26 @@ class LevensteinCounter {
         int layersDone = 2
 
 
-        for (int i = 0; i < bLength; i++) {
-            for (int j = 0; j < aLength; j++) {
-                double left = distances.get(layersDone - 1).get(j) + 1
-                double up = distances.get(layersDone - 2).get(j + 1) + 1
-                double symbolDiff = getDiff(a.substring(j, j + 1), b.substring(i, i + 1))
-                double diag = distances.get(layersDone - 2).get(j) + symbolDiff
-                double min1 = [left, up, diag].min()
+        for (def i = 0; i < bLength; i++) {
+            for (def j = 0; j < aLength; j++) {
+                def left = distances.get(layersDone - 1).get(j) + 1
+                def up = distances.get(layersDone - 2).get(j + 1) + 1
+                def symbolDiff = getDiff(a.substring(j, j + 1), b.substring(i, i + 1))
+                def diag = distances.get(layersDone - 2).get(j) + symbolDiff
+                def min1 = [left, up, diag].min()
 
                 left = distances.get(layersDone - 1).get([j - 1, 0].max()) + (j - 1 >= 0 ? 2 : 1)
                 up = distances.get([layersDone - 3, 0].max()).get(j + 1) + (i - 1 >= 0 ? 2 : 1)
-                double leftUp = distances.get(layersDone - 2).get([j - 1, 0].max()) + getDiff(a.substring([j - 1, 0].max(), j + 1),
+                def leftUp = distances.get(layersDone - 2).get([j - 1, 0].max()) + getDiff(a.substring([j - 1, 0].max(), j + 1),
                         b.substring(i, i + 1))
 
-                double upLeft = distances.get([layersDone - 3, 0].max()).get(j) + getDiff(a.substring(j, j + 1),
+                def upLeft = distances.get([layersDone - 3, 0].max()).get(j) + getDiff(a.substring(j, j + 1),
                         b.substring([i - 1, 0].max(), i + 1))
 
                 symbolDiff = getDiff(a.substring([j - 1, 0].max(), j + 1), b.substring([i - 1, 0].max(), i + 1))
                 diag = distances.get([layersDone - 3, 0].max()).get([j - 1, 0].max()) + symbolDiff
 
-                double min2 = [leftUp, upLeft, up, diag, left].min()
+                def min2 = [leftUp, upLeft, up, diag, left].min()
 
                 distances.get(layersDone - 1).set(j + 1, [min1, min2].min())
             }
@@ -80,13 +80,13 @@ class LevensteinCounter {
 
     private void initDistances(int layers, int length) {
         distances = new LinkedList<>()
-        for (int i = 0; i < layers; i++) {
+        for (def i = 0; i < layers; i++) {
             distances.add(new ArrayList<>(length + 1))
         }
-        for (int i = 0; i <= length; i++) {
+        for (def i = 0; i <= length; i++) {
             distances.get(0).add((double) i)
         }
-        for (int i = 1; i < layers; i++) {
+        for (def i = 1; i < layers; i++) {
             distances.get(i).add((double) i)
             for (int j = 1; j <= length; j++) {
                 distances.get(i).add(0d)
@@ -98,7 +98,7 @@ class LevensteinCounter {
     private void prepBeforeNextLayer(int length, int layer) {
         //cutting first layer and adding new line under
         distances.remove(0)
-        List<Double> toAdd = new ArrayList<>(length)
+        def toAdd = new ArrayList<>(length)
         toAdd.add((double) layer)
         for (int i = 0; i < length; i++)
             toAdd.add(0d)
@@ -106,7 +106,7 @@ class LevensteinCounter {
     }
 
     private static double getDiff(String a, String b) {
-        boolean len2 = (a.length() == 2 && b.length() == 2)
+        def len2 = (a.length() == 2 && b.length() == 2)
         if (a == b)
             return 0d
         if (len2 && isOrtMistakeBetween2TwoLetterWords(a, b))
@@ -119,20 +119,20 @@ class LevensteinCounter {
     }
 
     private static double isOrtMistakeBetween2Words(String a, String b) {
-        List<String> aList = mistakesMap.get(String.valueOf(a.charAt(a.length() - 1)))
+        def aList = mistakesMap.get(String.valueOf(a.charAt(a.length() - 1)))
         if (aList != null && aList.contains(b))
             return (a.length() < 2 || (mistakesMap.get(b) != null && mistakesMap.get(b).contains(a))) ? 0.25d : 1.25d
-        List<String> bList = mistakesMap.get(String.valueOf(b.charAt(b.length() - 1)))
+        def bList = mistakesMap.get(String.valueOf(b.charAt(b.length() - 1)))
         if (bList != null && bList.contains(a))
             return (b.length() < 2 || (mistakesMap.get(a) != null && mistakesMap.get(a).contains(b))) ? 0.25d : 1.25d
         return -1d
     }
 
     private static boolean isOrtMistakeBetween2TwoLetterWords(String a, String b) {
-        List<String> a1List = mistakesMap.get(a)
+        def a1List = mistakesMap.get(a)
         if (a1List != null && a1List.contains(b))
             return true
-        List<String> b1List = mistakesMap.get(b)
+        def b1List = mistakesMap.get(b)
         if (b1List != null && b1List.contains(a))
             return true
         return false
