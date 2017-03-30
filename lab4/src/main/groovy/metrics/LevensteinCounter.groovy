@@ -7,7 +7,7 @@ class LevensteinCounter {
     //swap with the weight 0.5
     //spelling mistake polish 0.25
 
-    private static Map<String, List<String>> mistakesMap = new HashMap<>()
+    private static mistakesMap = new HashMap<>()
 
     static {
         mistakesMap.put("a", ["ą"])
