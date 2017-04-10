@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory
 class ProbabilityCounter {
     private static final Logger logger = LoggerFactory.getLogger(ProbabilityCounter.class)
 
-    static double getNGramModelProbability(String input, Integer nGram, MongoService mongoService) {
+    static double getNGramModelProbability(String input, Integer nGram, ProbabilityFinder mongoService) {
         double probability = 0d;
 //        logger.info("Getting probability of $input for ngrams: $nGram")
         def slicedInput = input.toUpperCase().split("\\s+")
@@ -26,7 +26,7 @@ class ProbabilityCounter {
             it -> probability += mongoService.getProbabilityOfElement(it as String, ngram)
         }
 
-        return probability
+        return Math.pow(10,probability)
     }
 
 }
