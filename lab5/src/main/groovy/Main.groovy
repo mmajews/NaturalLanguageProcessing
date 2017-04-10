@@ -1,6 +1,9 @@
 import database.LanguageModelToDatabaseReader
+import database.MongoService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import services.ProbabilityCounter
+import services.ProbabilityFinder
 
 class Main {
     private static Logger logger = LoggerFactory.getLogger(Main.class)
@@ -8,8 +11,8 @@ class Main {
 
     static void main(String[] args) {
         logger.info("Starting app...")
-        def languageModel = new LanguageModelToDatabaseReader(PATH_TO_LANGUAGE_MODEL)
-//        ProbabilityFinder mongoService = new MongoService()
-//        print ProbabilityCounter.getNGramModelProbability("dwa zbliżone wyniki z", "3", mongoService)
+//        def languageModel = new LanguageModelToDatabaseReader(PATH_TO_LANGUAGE_MODEL)
+        ProbabilityFinder probabilityFinder = new MongoService()
+        print ProbabilityCounter.getNGramModelProbability("dwa zbliżone wyniki z", "2", probabilityFinder)
     }
 }

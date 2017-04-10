@@ -1,32 +1,39 @@
 package database
 
+import com.mongodb.DBCursor
 import com.mongodb.MongoClient
+import com.mongodb.MongoClientOptions
+import com.mongodb.client.FindIterable
 import com.mongodb.client.MongoCollection
+import com.mongodb.client.MongoCursor
 import com.mongodb.client.MongoDatabase
 import org.bson.Document
 import services.ProbOfElem
 import services.ProbabilityFinder
+
+import static com.mongodb.client.model.Filters.eq
 
 class MongoService implements ProbabilityFinder {
     public static final int CHUNK = 1000000
     public static final String N_GRAMS_PROB_3 = "nGramsProb3"
     public static final String N_GRAMS_PROB_2 = "nGramsProb2"
     public static final String N_GRAMS_PROB_1 = "nGramsProb1"
-    private List<Document> toBeInserted = new LinkedList<>();
-    private collectionMap;
-    private MongoClient mongoClient;
-    private MongoDatabase db;
-    private host = "localhost";
-    private port = 27017;
-    private databaseName = 'PJN';
+    private List<Document> toBeInserted = new LinkedList<>()
+    private collectionMap
+    private MongoClient mongoClient
+    private MongoDatabase db
+    private host = "localhost"
+    private port = 27017
+    private databaseName = 'PJN'
     private Integer previousNgram = -1
 
     MongoService() {
-        mongoClient = new MongoClient(host, port)
-        db = mongoClient.getDatabase(databaseName);
-        def collection3 = db.getCollection(N_GRAMS_PROB_3);
-        def collection2 = db.getCollection(N_GRAMS_PROB_2);
-        def collection1 = db.getCollection(N_GRAMS_PROB_1);
+        MongoClientOptions settings = MongoClientOptions.builder().codecRegistry(MongoClient.getDefaultCodecRegistry()).build()
+        mongoClient = new MongoClient(host, settings)
+        db = mongoClient.getDatabase(databaseName)
+        def collection3 = db.getCollection(N_GRAMS_PROB_3)
+        def collection2 = db.getCollection(N_GRAMS_PROB_2)
+        def collection1 = db.getCollection(N_GRAMS_PROB_1)
         collectionMap = [1: collection1, 2: collection2, 3: collection3]
     }
 
@@ -42,7 +49,7 @@ class MongoService implements ProbabilityFinder {
     }
 
     private static Document createDocumentFromElem(ProbOfElem probOfElem) {
-        Document dbObject = new Document();
+        Document dbObject = new Document()
         dbObject.put("value", probOfElem.value.toUpperCase())
         dbObject.put("probability", probOfElem.probability)
         dbObject.put("nGram", probOfElem.nGram as Integer)
@@ -68,12 +75,13 @@ class MongoService implements ProbabilityFinder {
     @Override
     double getProbabilityOfElement(String value, Integer nGram) {
         value = value.toUpperCase().trim()
-        def query = new Document()
-        query.put("value", value)
-        query.put("nGram", Integer)
-        def cursor = collectionMap.get(nGram).find(query).limit(1)
-        def first = cursor.first()
-        def result = (++first)["probability"]
-        Optional.ofNullable(result as Double).orElse(0d)
+        def mongoCollection = collectionMap.get(nGram)
+        MongoCursor<Document> cursor = mongoCollection.find(eq("value", value)).iterator()
+        if(!cursor.hasNext()){
+            0d
+        } else{
+            Document result = cursor.next()
+            return result.get("probability") as double
+        }
     }
 }

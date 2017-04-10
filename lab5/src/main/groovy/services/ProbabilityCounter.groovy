@@ -25,6 +25,7 @@ class ProbabilityCounter {
         allNGrams.each {
             it -> probability += mongoService.getProbabilityOfElement(it as String, ngram)
         }
+
         return probability
     }
 
