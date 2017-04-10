@@ -1,22 +1,31 @@
 package services
 
+import database.MongoService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 class ProbabilityCounter {
     private static final Logger logger = LoggerFactory.getLogger(ProbabilityCounter.class)
-    private LanguageModel languageModel
 
-    double getNGramModelProbability(String input, String nGram) {
-        logger.info("Getting probability")
-        def mapOfProbabilities = languageModel.getProbabilityMap().get(nGram)
+    static double getNGramModelProbability(String input, String nGram, MongoService mongoService) {
+        double probability = 0d;
+        logger.info("Getting probability of $input for ngrams: $nGram")
         def slicedInput = input.toUpperCase().split("\\s+")
+        def allNGrams = []
+        def ngram = nGram as Integer
 
-        for (def i = 0; i + 1 < slicedInput.size(); i++) {
-            def j = i+1
-            def diGram = slicedInput[i] + " " + slicedInput[j]
+        for (def i = 0; ngram + i <= slicedInput.size(); i++) {
+            def currWord = ""
+            for (def j = 0; j < ngram; j++) {
+                currWord += slicedInput[j + i] + " "
+            }
+            allNGrams.add(currWord)
         }
 
+        allNGrams.each {
+            it -> probability += mongoService.getProbabilityOfElement(it as String, ngram)
+        }
+        return probability
     }
 
 }

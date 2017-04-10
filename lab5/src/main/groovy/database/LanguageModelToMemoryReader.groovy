@@ -1,4 +1,4 @@
-package services
+package database
 
 import com.google.common.base.Preconditions
 import groovy.time.TimeCategory
@@ -6,8 +6,8 @@ import org.apache.commons.lang3.NotImplementedException
 import org.eclipse.collections.impl.factory.Maps
 import org.slf4j.LoggerFactory
 
-class LanguageModel {
-    private static final def logger = LoggerFactory.getLogger(LanguageModel.class)
+class LanguageModelToMemoryReader {
+    private static final def logger = LoggerFactory.getLogger(LanguageModelToMemoryReader.class)
     private static final String UNI_GRAMS = "1"
     private static final String DI_GRAMS = "2"
     private static final String TRI_GRAMS = "3"
@@ -17,7 +17,7 @@ class LanguageModel {
 
     def probabilityMap = Maps.mutable.of(UNI_GRAMS, Maps.mutable.empty(), DI_GRAMS, Maps.mutable.empty(), TRI_GRAMS, Maps.mutable.empty())
 
-    LanguageModel(String pathToLanguageModel) {
+    LanguageModelToMemoryReader(String pathToLanguageModel) {
         def fileWithLanguageModel = new File(pathToLanguageModel)
         Preconditions.checkArgument(fileWithLanguageModel.exists(), "File with path:$pathToLanguageModel does not exists")
         logger.info("Reading language model from $pathToLanguageModel")
@@ -54,8 +54,11 @@ class LanguageModel {
     }
 
     private void processLineWithProbability(String line, String currentGrams) {
-        def elements = line.split(TAB_REGEX)
+        if(currentGrams != TRI_GRAMS){
+            return
+        }
 
+        def elements = line.split(TAB_REGEX)
         if (elements.size() != 3 && elements.size() != 2) {
             return
         }
