@@ -2,5 +2,7 @@ package services
 
 
 interface ProbabilityFinder {
-    double getProbabilityOfElement(String value, Integer nGram)
+    Double getProbabilityOfElement(String value, Integer nGram)
+
+    Double getBackOffValue(String value, Integer nGram)
 }

@@ -20,6 +20,7 @@ class LanguageModelToDatabaseReader {
         Preconditions.checkArgument(fileWithLanguageModel.exists(), "File with path:$pathToFile does not exists")
         logger.info("Reading language model from $pathToFile")
         initializeDatabase(pathToFile as File)
+        mongoService.createIndexes()
     }
 
 
@@ -45,6 +46,7 @@ class LanguageModelToDatabaseReader {
         def elements = line.split(TAB_REGEX)
 
         if (elements.size() != 3 && elements.size() != 2) {
+            println elements
             return
         }
 

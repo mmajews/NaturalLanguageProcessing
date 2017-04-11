@@ -1,10 +1,8 @@
 package database
 
-import com.mongodb.DBCursor
+import com.mongodb.BasicDBObject
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientOptions
-import com.mongodb.client.FindIterable
-import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoCursor
 import com.mongodb.client.MongoDatabase
 import org.bson.Document
@@ -35,6 +33,14 @@ class MongoService implements ProbabilityFinder {
         def collection2 = db.getCollection(N_GRAMS_PROB_2)
         def collection1 = db.getCollection(N_GRAMS_PROB_1)
         collectionMap = [1: collection1, 2: collection2, 3: collection3]
+    }
+
+    void createIndexes() {
+        BasicDBObject basicDBObject = new BasicDBObject()
+        basicDBObject.put("value", 1)
+        collectionMap.each {
+            k, v -> v.createIndex(basicDBObject)
+        }
     }
 
     void saveProbOfElement(ProbOfElem probOfElem, Integer nGram) {
@@ -73,15 +79,28 @@ class MongoService implements ProbabilityFinder {
 
 
     @Override
-    double getProbabilityOfElement(String value, Integer nGram) {
+    Double getProbabilityOfElement(String value, Integer nGram) {
         value = value.toUpperCase().trim()
         def mongoCollection = collectionMap.get(nGram)
         MongoCursor<Document> cursor = mongoCollection.find(eq("value", value)).iterator()
-        if(!cursor.hasNext()){
-            0d
-        } else{
+        if (!cursor.hasNext()) {
+            null
+        } else {
             Document result = cursor.next()
             return result.get("probability") as double
+        }
+    }
+
+    @Override
+    Double getBackOffValue(String value, Integer nGram) {
+        value = value.toUpperCase().trim()
+        def mongoCollection = collectionMap.get(nGram)
+        MongoCursor<Document> cursor = mongoCollection.find(eq("value", value)).iterator()
+        if (!cursor.hasNext()) {
+            null
+        } else {
+            Document result = cursor.next()
+            return result.get("backOffValue") as double
         }
     }
 }
