@@ -21,6 +21,7 @@ class TFIDFHelper {
         for (Document document : documents) {
             if (document.getId() != documentToCompare.getId()) {
                 def similarity = vectorSpace.cosineSimilarity(documentToCompare, document)
+                logger.info("Similarity for $document.id : $similarity")
                 if (similarity > max) {
                     max = similarity
                     bestDoc = document

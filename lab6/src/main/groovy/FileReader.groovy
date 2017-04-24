@@ -35,7 +35,7 @@ class FileReader {
         def filePath = inputFile.getAbsolutePath()
         Preconditions.checkArgument(inputFile.exists(), "File $filePath does not exist")
         def content = inputFile.text
-        def documents = content.split("#\\d+\\n").toList()
+        def documents = content.split("#\\d+").toList()
         documents = documents.stream().filter {
             el -> el != ""
         }.collect(Collectors.toList())
