@@ -2,6 +2,8 @@ import com.google.common.base.Preconditions
 
 import java.util.stream.Collectors
 
+import static tfidf.TermsHelper.getTermsForString
+
 class FileReader {
 
     static Set<String> generateStopList(List<List<String>> docs, double stopListThreshold) {
@@ -28,7 +30,6 @@ class FileReader {
         stopList
     }
 
-
     static List<List<String>> readFileIntoDocuments(String path) {
         def inputFile = new File(path)
         def filePath = inputFile.getAbsolutePath()
@@ -43,14 +44,9 @@ class FileReader {
         def slicedElements = new ArrayList<List<String>>()
         documents.forEach {
             el ->
-                def ready = el.split("\\s+").toList().stream().map {
-                    var -> var.toUpperCase().trim().replaceAll("\\p{P}", "")
-                }.collect(Collectors.toList())
+                def ready = getTermsForString(el)
                 slicedElements.add(ready)
         }
-
         slicedElements
     }
-
-
 }

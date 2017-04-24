@@ -1,3 +1,7 @@
+package tfidf
+
+import java.util.stream.Collectors
+
 class Document {
     private List<String> terms
     private Set<String> stopList
@@ -8,7 +12,12 @@ class Document {
         this.terms = terms
         this.id = id
         this.stopList = stopList
-        processTerms(terms)
+
+        this.terms = this.terms.stream().filter {
+            el -> !stopList.contains(el)
+        }.collect(Collectors.toList())
+
+        processTerms(this.terms)
     }
 
     private processTerms(List<String> terms) {
@@ -29,8 +38,13 @@ class Document {
 
     double getTermFrequency(String term) {
         if (frequency.containsKey(term)) {
-            frequency.get(term)
+            return frequency.get(term) as double
+        } else {
+            return 0d
         }
-        0d
+    }
+
+    int getId() {
+        id
     }
 }
