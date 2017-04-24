@@ -1,3 +1,5 @@
+import graph.Graph
+import graph.GraphHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -17,7 +19,9 @@ class Main {
         def toTest = "Jugosłowiański minister informacji Goran Matić oskarżył\n" +
                 "zachodnie służby wywiadowcze o zorganizowanie niedawnego\n" +
                 "zabójstwa ministra obrony Pavle Bulatovicia."
-        tfidfTest(sliced, stopList, toTest)
+//        tfidfTest(sliced, stopList, toTest)
+
+        GraphHelper.test(sliced, stopList, toTest, 10)
         logger.info("Finishing reading file from documents")
     }
 

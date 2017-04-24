@@ -4,9 +4,8 @@ import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.Multimap
 
 class Corpus {
-
-    private List<Document> documents
-    private Multimap<String, Document> termToDocument = ArrayListMultimap.create()
+    List<Document> documents
+    Multimap<String, Document> termToDocument = ArrayListMultimap.create()
 
     Corpus(List<Document> documents) {
         this.documents = documents

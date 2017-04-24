@@ -37,7 +37,6 @@ class VectorSpaceModel {
         map
     }
 
-
     private double getMagnitude(Document document) {
         double magnitude = 0;
         Map<String, Double> weights = tfIDfWeights.get(document);
