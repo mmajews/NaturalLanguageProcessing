@@ -1,11 +1,9 @@
-import graph.Graph
 import graph.GraphHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 import static FileReader.generateStopList
 import static FileReader.readFileIntoDocuments
-import static tfidf.TFIDFHelper.tfidfTest
 
 class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class)
@@ -16,9 +14,9 @@ class Main {
         List<List<String>> sliced = createTermsForDocuments()
         Set<String> stopList = createStopList(sliced)
 
-        def toTest = "Jugosłowiański minister informacji Goran Matić oskarżył\n" +
-                "zachodnie służby wywiadowcze o zorganizowanie niedawnego\n" +
-                "zabójstwa ministra obrony Pavle Bulatovicia."
+        def toTest = "Mariusz Czerkawski strzelił dwie bramki i przy dwóch asystował\n" +
+                "w wygranym przez jego zespół New York Islanders meczu hokejowej\n" +
+                "ligi NHL z Tampa Bay Lightning 5:4."
 //        tfidfTest(sliced, stopList, toTest)
 
         GraphHelper.test(sliced, stopList, toTest, 10)
@@ -26,7 +24,7 @@ class Main {
     }
 
     private static createTermsForDocuments() {
-        def sliced = readFileIntoDocuments("src/main/resources/pap_trimmed.txt")
+        def sliced = readFileIntoDocuments("src/main/resources/pap.txt")
         logger.info("Finished reading files into arrays with terms")
         sliced
     }
@@ -36,5 +34,8 @@ class Main {
         logger.info("Finished creating stoplist")
         stopList
     }
+
+
+
 
 }

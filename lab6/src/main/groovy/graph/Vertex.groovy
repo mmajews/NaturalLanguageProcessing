@@ -1,17 +1,32 @@
 package graph
 
+import com.google.common.collect.ArrayListMultimap
+import com.google.common.collect.Multimap
+
 class Vertex<E> {
     int id
-    Set<Vertex> neighbours = new HashSet<>()
+    Map<Vertex, Integer> neighbours = new HashMap<>()
     E content
 
-    Vertex(int id, E content){
+    Vertex(int id, E content) {
         this.id = id
         this.content = content
     }
 
     void addNeighbour(Vertex neighbour) {
-        neighbours.add(neighbour)
+        def value = neighbours.putIfAbsent(neighbour, 1)
+        if (value != null) {
+            value++
+            neighbours.put(neighbour, value)
+        }
+    }
+
+    int getNumberOfConnectionsToVertex(Vertex vertex) {
+        if (!neighbours.containsKey(vertex)) {
+            return 0
+        } else {
+            return neighbours.get(vertex)
+        }
     }
 
     boolean equals(o) {

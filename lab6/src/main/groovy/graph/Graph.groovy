@@ -40,4 +40,8 @@ class Graph {
         }
         return filtered
     }
+
+    Vertex getVertexBasedOnString(String text){
+        return vertexMap.get(text)
+    }
 }
