@@ -18,18 +18,20 @@ class TFIDFHelper {
 
         def max = 0
         Document bestDoc
+        Map<Integer, Double> similarities = new TreeMap<>()
         for (Document document : documents) {
             if (document.getId() != documentToCompare.getId()) {
                 def similarity = vectorSpace.cosineSimilarity(documentToCompare, document)
-                logger.info("Similarity for $document.id : $similarity")
-                if (similarity > max) {
-                    max = similarity
-                    bestDoc = document
-                }
+//                logger.info("Similarity for $document.id : $similarity")
+                similarities.put(document.getId(), similarity)
             }
         }
-        logger.info("Best doc is " + bestDoc.getId())
 
+        def it = similarities.descendingMap().entrySet().iterator()
+        for (int i = 0; i < 10; i++) {
+            logger.info(it.next().getKey() as String)
+        }
+        logger.info("Finished")
     }
 
     private static createDocumentsList(List<List<String>> sliced, Set<String> stopList) {

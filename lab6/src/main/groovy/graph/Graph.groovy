@@ -16,7 +16,7 @@ class Graph {
         this.stopList = stopList
     }
 
-    def createConnections(List<List<String>> lists) {
+    def createConnections1(List<List<String>> lists) {
         lists.forEach {
             document ->
                 def filtered = filterThroughStopList(document)
@@ -30,6 +30,19 @@ class Graph {
         }
     }
 
+    def createConnections(List<String> lists) {
+        def filtered = filterThroughStopList(lists)
+
+        for (def i = 0; i + k < filtered.size(); i++) {
+            def sublist = filtered.subList(i, i + 1 + k)
+            def from = sublist.get(0)
+            sublist.forEach {
+                connectTo -> vertexMap.get(from).addNeighbour(vertexMap.get(connectTo))
+            }
+        }
+
+    }
+
     List<String> filterThroughStopList(List<String> strings) {
         def filtered = new ArrayList<String>()
         strings.forEach {
@@ -41,7 +54,7 @@ class Graph {
         return filtered
     }
 
-    Vertex getVertexBasedOnString(String text){
+    Vertex getVertexBasedOnString(String text) {
         return vertexMap.get(text)
     }
 }

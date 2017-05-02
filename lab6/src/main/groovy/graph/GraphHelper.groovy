@@ -10,37 +10,50 @@ class GraphHelper {
     static final Logger logger = LoggerFactory.getLogger(GraphHelper.class)
 
     static test(List<List<String>> elements, Set<String> stopList, String toFindSimilar, int k) {
-        Set<String> terms = new HashSet<>()
-        terms.addAll(getTermsForString(toFindSimilar))
+//        Set<String> terms = new HashSet<>()
+//        terms.addAll(getTermsForString(toFindSimilar))
+//
+//        elements.forEach {
+//            list ->
+//                list.forEach {
+//                    element ->
+//                        if (!stopList.contains(element)) {
+//                            terms.add(element)
+//                        }
+//                }
+//        }
+//
+//        Graph graph = new Graph(terms, k, stopList);
 
-        elements.forEach {
-            list ->
-                list.forEach {
-                    element ->
-                        if (!stopList.contains(element)) {
-                            terms.add(element)
-                        }
-                }
+        Map<Integer, Graph> intToGraph = new HashMap<>()
+        Map<Integer, String> intToText = new HashMap<>()
+        def count = 1
+        for (List<String> element : elements) {
+            Graph newGraph = new Graph(element.toSet(), 5, stopList)
+            newGraph.createConnections(element)
+            intToGraph.put(count, newGraph)
+            intToText.put(count, element.stream().collect(Collectors.joining(" ")))
+            count++
         }
 
-        Graph graph = new Graph(terms, k, stopList);
-        logger.info("Vertexes created")
-        graph.createConnections(elements)
-        logger.info("Finished creating connections!")
+//        logger.info("Vertexes created")
+//        graph.createConnections(elements)
+//        logger.info("Finished creating connections!")
 
 
-        def svmVectorOfText = countSVMVector(toFindSimilar, graph, stopList)
+        def toCompare = 12
+        def svmVectorOfText = countSVMVector(intToText.get(toCompare), intToGraph.get(toCompare), stopList)
         logger.info("SVM vector of text to find found")
         def bestCosineSimilarity = 0d
 
-        def count = 1
+        def count1 = 1
         def similarities = new TreeMap<Double, Integer>()
         for (List<String> note : elements) {
-            def svmVectorOfNote = countSVMVector(note.stream().collect(Collectors.joining(" ")), graph, stopList)
+            def svmVectorOfNote = countSVMVector(note.stream().collect(Collectors.joining(" ")), intToGraph.get(count1), stopList)
             def cosineSimilarity = cosineSimilarity(svmVectorOfText, svmVectorOfNote)
 //            logger.info("$cosineSimilarity")
-            similarities.put(cosineSimilarity, count)
-            count++
+            similarities.put(cosineSimilarity, count1)
+            count1++
         }
 
         def it = similarities.descendingMap().entrySet().iterator()
@@ -73,11 +86,9 @@ class GraphHelper {
         for (def i = 0; i < terms.size(); i++) {
             String currTerm = terms.get(i)
             def vertex = graph.getVertexBasedOnString(currTerm)
+
             Preconditions.checkNotNull(currTerm, "Term should be present in graph $currTerm")
             for (def j = 0; j < terms.size(); j++) {
-                if (j == i) {
-                    continue
-                }
                 def connectToVertex = graph.getVertexBasedOnString(terms.get(j))
                 vector.add(vertex.getNumberOfConnectionsToVertex(connectToVertex))
             }
