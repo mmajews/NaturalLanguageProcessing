@@ -1,11 +1,15 @@
 import logging
+
+import gensim
 import re
 import string
 from pathlib import Path
 
+from gensim import corpora, similarities
+
 logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S', level=logging.INFO)
 PERCENTAGE_OF_WORD_ELIMINATION = 0.7
-NUMBER_OF_ALL_DOCUMENTS = 51572
+NUMBER_OF_ALL_DOCUMENTS = 51574
 ELIMINATION_THRESHOLD = NUMBER_OF_ALL_DOCUMENTS * PERCENTAGE_OF_WORD_ELIMINATION
 
 logging.info("Program started!")
@@ -76,3 +80,23 @@ for x in range(0, len(allNotes)):
             newSlicedWords.append(word)
     allNotes[x] = " ".join(newSlicedWords)
 logging.info("All notes cleaned from elements to be eliminated!")
+
+allNotesDividedIntoTerms = []
+for x in allNotes:
+    divided = re.compile("\s+").split(x)
+    allNotesDividedIntoTerms.append(divided)
+
+dictionary = corpora.Dictionary(allNotesDividedIntoTerms)
+corp = [dictionary.doc2bow(text) for text in allNotesDividedIntoTerms]
+logging.info(dictionary)
+
+lsi = gensim.models.lsimodel.LsiModel(corpus=corp, id2word=dictionary, num_topics=NUMBER_OF_ALL_DOCUMENTS)
+gensim.models.LsiModel.save(fname="lsi.model")
+logging.info("Finished creating LSI model for corpus")
+
+# index = similarities.MatrixSimilarity(lsi[corp])
+# vec_bow = dictionary.doc2bow(allNotesDividedIntoTerms)
+# vec_lsi = lsi[vec_bow]
+# sims = index[vec_lsi]
+# sims = sorted(enumerate(sims), key=lambda item: -item[1])
+# print(sims)
