@@ -1,16 +1,16 @@
 import logging
-
-import gensim
 import re
 import string
 from pathlib import Path
 
+import gensim
 from gensim import corpora, similarities
 
 logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S', level=logging.INFO)
 PERCENTAGE_OF_WORD_ELIMINATION = 0.7
 NUMBER_OF_ALL_DOCUMENTS = 51574
 ELIMINATION_THRESHOLD = NUMBER_OF_ALL_DOCUMENTS * PERCENTAGE_OF_WORD_ELIMINATION
+NUMBER_OF_TOPICS = 10000
 
 logging.info("Program started!")
 # Slicing input to documents
@@ -90,13 +90,30 @@ dictionary = corpora.Dictionary(allNotesDividedIntoTerms)
 corp = [dictionary.doc2bow(text) for text in allNotesDividedIntoTerms]
 logging.info(dictionary)
 
-lsi = gensim.models.lsimodel.LsiModel(corpus=corp, id2word=dictionary, num_topics=NUMBER_OF_ALL_DOCUMENTS)
-gensim.models.LsiModel.save(fname="lsi.model")
+lsi = gensim.models.lsimodel.LsiModel(corpus=corp, id2word=dictionary, num_topics=NUMBER_OF_TOPICS)
+gensim.models.LsiModel.save(fname="lsi.model", self=lsi)
 logging.info("Finished creating LSI model for corpus")
 
-# index = similarities.MatrixSimilarity(lsi[corp])
-# vec_bow = dictionary.doc2bow(allNotesDividedIntoTerms)
-# vec_lsi = lsi[vec_bow]
-# sims = index[vec_lsi]
-# sims = sorted(enumerate(sims), key=lambda item: -item[1])
-# print(sims)
+index = similarities.MatrixSimilarity(lsi[corp])
+index.save("simimilarityIndex.index")
+noteNumber = 1
+NUMBER_OF_SIMILAR = 5
+file = open("results.txt", 'w+')
+
+
+def findSimilaritiesForDoc(noteNumber, file, n_similar):
+    toFindSimilarTo = allNotesDividedIntoTerms[noteNumber - 1]
+    vec_bow = dictionary.doc2bow(toFindSimilarTo)
+    vec_lsi = lsi[vec_bow]
+    sims = index[vec_lsi]
+    sims = sorted(enumerate(sims), key=lambda item: -item[1])
+    oneSimilarity = str(noteNumber) + " -> "
+    for i in range(0, n_similar):
+        oneSimilarity += "{" + str((sims[i])[0] + 1) + " " + str((sims[i])[1]) + "}"
+    file.write(oneSimilarity + '\n')
+
+
+for i in range(1, NUMBER_OF_TOPICS + 1):
+    findSimilaritiesForDoc(i, file, NUMBER_OF_SIMILAR)
+
+file.close()
