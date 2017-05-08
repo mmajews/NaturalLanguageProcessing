@@ -8,13 +8,13 @@ from gensim import corpora, similarities
 
 logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S', level=logging.INFO)
 PERCENTAGE_OF_WORD_ELIMINATION = 0.7
-NUMBER_OF_ALL_DOCUMENTS = 51574
+NUMBER_OF_ALL_DOCUMENTS = 135
 ELIMINATION_THRESHOLD = NUMBER_OF_ALL_DOCUMENTS * PERCENTAGE_OF_WORD_ELIMINATION
-NUMBER_OF_TOPICS = 10000
+NUMBER_OF_TOPICS = 135
 
 logging.info("Program started!")
 # Slicing input to documents
-file_path = "pap.txt"
+file_path = "pap1.txt"
 contents = Path(file_path).read_text(encoding="UTF-8")
 allNotes = re.compile("#\d+").split(contents)
 allNotes.pop(0)
