@@ -40,3 +40,9 @@ hs_err_pid*
 
 .idea/
 /.idea/
+/lsi.model.projection.u.npy
+/lsi.model
+/lsi.model.projection
+/polimorfologik-2.1.txt
+/simimilarityIndex.index.index.npy
+/simimilarityIndex.index
