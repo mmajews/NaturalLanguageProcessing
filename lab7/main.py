@@ -1,9 +1,9 @@
 import logging
-import re
-import string
 from pathlib import Path
 
 import gensim
+import re
+import string
 from gensim import corpora, similarities
 
 logging.basicConfig(format='%(levelname)s: %(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S', level=logging.INFO)
@@ -101,16 +101,16 @@ NUMBER_OF_SIMILAR = 5
 file = open("results.txt", 'w+')
 
 
-def find_similarities_for_doc(noteNumber, file, n_similar):
-    to_find_similar_to = allNotesDividedIntoTerms[noteNumber - 1]
+def find_similarities_for_doc(note_number, output_file, n_similar):
+    to_find_similar_to = allNotesDividedIntoTerms[note_number - 1]
     vec_bow = dictionary.doc2bow(to_find_similar_to)
     vec_lsi = lsi[vec_bow]
     sims = index[vec_lsi]
     sims = sorted(enumerate(sims), key=lambda item: -item[1])
-    one_similarity = str(noteNumber) + " -> "
+    one_similarity = str(note_number) + " -> "
     for j in range(0, n_similar):
         one_similarity += "{" + str((sims[j])[0] + 1) + " " + str((sims[j])[1]) + "}"
-    file.write(one_similarity + '\n')
+    output_file.write(one_similarity + '\n')
 
 
 for i in range(1, NUMBER_OF_TOPICS + 1):
