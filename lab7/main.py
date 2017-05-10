@@ -101,19 +101,19 @@ NUMBER_OF_SIMILAR = 5
 file = open("results.txt", 'w+')
 
 
-def findSimilaritiesForDoc(noteNumber, file, n_similar):
-    toFindSimilarTo = allNotesDividedIntoTerms[noteNumber - 1]
-    vec_bow = dictionary.doc2bow(toFindSimilarTo)
+def find_similarities_for_doc(noteNumber, file, n_similar):
+    to_find_similar_to = allNotesDividedIntoTerms[noteNumber - 1]
+    vec_bow = dictionary.doc2bow(to_find_similar_to)
     vec_lsi = lsi[vec_bow]
     sims = index[vec_lsi]
     sims = sorted(enumerate(sims), key=lambda item: -item[1])
-    oneSimilarity = str(noteNumber) + " -> "
-    for i in range(0, n_similar):
-        oneSimilarity += "{" + str((sims[i])[0] + 1) + " " + str((sims[i])[1]) + "}"
-    file.write(oneSimilarity + '\n')
+    one_similarity = str(noteNumber) + " -> "
+    for j in range(0, n_similar):
+        one_similarity += "{" + str((sims[j])[0] + 1) + " " + str((sims[j])[1]) + "}"
+    file.write(one_similarity + '\n')
 
 
 for i in range(1, NUMBER_OF_TOPICS + 1):
-    findSimilaritiesForDoc(i, file, NUMBER_OF_SIMILAR)
+    find_similarities_for_doc(i, file, NUMBER_OF_SIMILAR)
 
 file.close()
