@@ -5,5 +5,4 @@ Preconditions.checkArgument(args.size() == 2, "Put two arguments! 1. lines range
 def lines = args[0]
 def toSearchFor = args[1]
 def process = "grep -n -A $lines -B $lines '$toSearchFor' in/potop.txt".execute()
-def output = process.in.text
-println(output)
+println(process.in.text)
