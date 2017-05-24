@@ -5,3 +5,5 @@ gradlew
 gradlew.bat
 gradlew/
 gradle/
+out/locations.index
+out/people.index
