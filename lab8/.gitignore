@@ -1,2 +1,7 @@
 
 /.idea/
+.gradle
+gradlew
+gradlew.bat
+gradlew/
+gradle/
