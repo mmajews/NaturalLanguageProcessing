@@ -1,9 +1,9 @@
 @Grab(group = 'com.google.guava', module = 'guava', version = '18.0')
 import com.google.common.base.Preconditions
 
-//Preconditions.checkArgument(args.size() == 2, "Put two arguments! 1. lines range 2. word to search for")
-def lines = 5
-def toSearchFor = "Sienkiewicz"
+Preconditions.checkArgument(args.size() == 2, "Put two arguments! 1. lines range 2. word to search for")
+def lines = args[0]
+def toSearchFor = args[1]
 println "Number of lines: " + lines
 println "Search for: " + toSearchFor
 def sout = new StringBuilder()
