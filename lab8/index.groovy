@@ -1,3 +1,4 @@
+import java.nio.charset.Charset
 import java.util.stream.Collectors
 
 def inputFile = "out/potop.txt.ccl" as File
@@ -63,7 +64,11 @@ private static void printOutTop(int top, Map<?, Integer> input) {
     input.entrySet().stream()
             .sorted(Map.Entry.<?, Integer> comparingByValue().reversed())
             .limit(top)
-            .forEach({ el -> System.out.println(el) })
+            .forEach({
+        el ->
+            def out = (el.getKey() as String) + " " + (el.getValue() as String)
+            println out
+    })
 }
 
 private static Map<String, Integer> getCounts(input) {
